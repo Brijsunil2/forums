@@ -1,10 +1,7 @@
+import ForumsScreen from "./screens/ForumsScreen/ForumsScreen";
 
 function App() {
-  return (
-    <div>
-      Hello
-    </div>
-  );
+  return <ForumsScreen />;
 }
 
 export default App;
