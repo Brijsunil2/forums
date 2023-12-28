@@ -1,4 +1,5 @@
-import { Container, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
+import { motion } from "framer-motion";
 
 const ForumEntry = ({
   author,
@@ -8,7 +9,11 @@ const ForumEntry = ({
   numPosts,
 }) => {
   return (
-    <Container className="forumentry-container">
+    <motion.div
+      className="forumentry-container"
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+    >
       <Row className="d-flex p-3">
         <Col className="forumentry-col-1" xs={6}>
           <h3 className="forumentry-title">{title}</h3>
@@ -20,9 +25,10 @@ const ForumEntry = ({
         </Col>
         <Col className="forumentry-col-3">
           <p className="forumentry-numposts">{numPosts}</p>
+          <p className="forumentry-numposts">Posts</p>
         </Col>
       </Row>
-    </Container>
+    </motion.div>
   );
 };
 

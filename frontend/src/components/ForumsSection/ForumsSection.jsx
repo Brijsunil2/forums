@@ -1,13 +1,28 @@
 import "./ForumsSection.css";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import ForumEntry from "./ForumEntry";
+import Searchbar from "../Searchbar/Searchbar";
 
 const ForumsSection = () => {
+  const searchBarSubmit = (value) => {
+    console.log(value);
+  };
+
   return (
     <div className="forumssection-container">
       <Container>
         <h2>Forums</h2>
-        <Container className="forumentries-container p-0">
+        <Container>
+          <Row className="mt-2">
+            <Col xs={8}>
+              <Searchbar submitFunc={searchBarSubmit} />
+            </Col>
+            <Col className="text-end">
+              <Button>Create Forum</Button>
+            </Col>
+          </Row>
+        </Container>
+        <Container className="forumentries-container">
           <ForumEntry
             author="Hello"
             dateCreated="10/10/2023"
