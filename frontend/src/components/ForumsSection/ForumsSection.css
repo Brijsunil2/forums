@@ -3,6 +3,10 @@
   height: 100%;
 }
 
+.forumssection-container .btn {
+  border-radius: 0;
+}
+
 .forumentries-container {
   width: 100%;
 }
