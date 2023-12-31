@@ -1,11 +1,39 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
 import "bootstrap/dist/css/bootstrap.min.css";
-import './main.css'
+import "./main.css";
+import React, { lazy } from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import store from "./store.js";
+import { Provider } from "react-redux";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+const ForumsScreen = lazy(() =>
+  import("./screens/ForumsScreen/ForumsScreen.jsx")
+);
+const NotFoundScreen = lazy(() =>
+  import("./screens/ForumsScreen/ForumsScreen.jsx")
+);
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <>
+      <Route path="/" element={<App />}>
+        <Route index={true} path="/" element={<ForumsScreen />} />
+        <Route path="*" element={<NotFoundScreen />} />
+      </Route>
+    </>
+  )
+);
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <Provider store={store}>
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
+  </Provider>
+);

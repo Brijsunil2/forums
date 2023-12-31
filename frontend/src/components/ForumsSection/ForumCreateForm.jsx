@@ -1,5 +1,8 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { Button, Col, Form, Row } from "react-bootstrap";
+import { useCreateForumMutation } from "../../slices/forumsApiSlice";
 import * as formik from "formik";
 import * as yup from "yup";
 
@@ -13,13 +16,22 @@ const ForumCreateForm = () => {
     desc: yup.string().required(),
   });
 
+  const navagate = useNavigate();
+  // const dispatch = useDispatch();
+
+  // const [createForum, { isLoading }] = useCreateForumMutation();
+
   const submitHandler = async (values) => {
     console.log(values);
     setValidate(true);
+
+    // try {
+    //   const res = await createForum({...values,  })
+    // }
   };
 
   return (
-    <Formik 
+    <Formik
       validationSchema={formSchema}
       onSubmit={(values) => submitHandler(values)}
       initialValues={{
@@ -50,7 +62,7 @@ const ForumCreateForm = () => {
               <Form.Label>Forum description</Form.Label>
               <Form.Control
                 type="text"
-                as="textarea" 
+                as="textarea"
                 rows={3}
                 placeholder="Forum description"
                 name="desc"
