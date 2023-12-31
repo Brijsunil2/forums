@@ -1,8 +1,8 @@
 import express from "express";
 const router = express.Router();
-import { createForum } from "../controllers/forumControllers.js";
+import { getForums, createForum } from "../controllers/forumControllers.js";
 
-
-router.post("/", createForum);
+router.get("/", getForums);
+router.post("/create-forum", createForum);
 
 export default router;
