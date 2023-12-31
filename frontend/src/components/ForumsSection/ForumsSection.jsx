@@ -1,12 +1,36 @@
 import "./ForumsSection.css";
-import { useState } from "react";
-import { Container, Row, Col, Button, Modal, Form } from "react-bootstrap";
+import { useState, useEffect, useRef } from "react";
+import { Container, Row, Col, Button, Modal, Spinner } from "react-bootstrap";
+import { useGetForumsMutation } from "../../slices/forumsApiSlice.js";
 import ForumEntry from "./ForumEntry";
 import Searchbar from "../Searchbar/Searchbar";
 import ForumCreateForm from "./ForumCreateForm";
 
 const ForumsSection = () => {
+  const DESC_MAX_LENGTH = 300;
+  const init = useRef(false);
   const [showModal, setShowModal] = useState(false);
+  const [forums, setForums] = useState([]);
+  const [page, setPage] = useState(1);
+
+  const [getForums, { isLoading }] = useGetForumsMutation();
+
+  const getForumsHandler = async (skip) => {
+    try {
+      const res = await getForums({ skip: skip }).unwrap();
+      setForums(res);
+    } catch (err) {
+      console.log(err?.data?.message || err.error);
+    }
+  };
+
+  useEffect(() => {
+    if (!init.current) {
+      getForumsHandler(page - 1);
+    }
+
+    return () => (init.current = true);
+  }, [init, getForumsHandler, forums, setForums]);
 
   const handleModalClose = () => setShowModal(false);
 
@@ -32,27 +56,31 @@ const ForumsSection = () => {
             </Row>
           </Container>
           <Container className="forumentries-container">
-            <ForumEntry
-              author="Hello"
-              dateCreated="10/10/2023"
-              title="Some Title"
-              subtitle="The subtitle"
-              numPosts="50"
-            />
-            <ForumEntry
-              author="Hello"
-              dateCreated="10/10/2023"
-              title="Some Title"
-              subtitle=""
-              numPosts="50"
-            />
-            <ForumEntry
-              author="Hello"
-              dateCreated="10/10/2023"
-              title="Some Title"
-              subtitle="The subtitle"
-              numPosts="50"
-            />
+            {isLoading ? (
+              <Container className="d-flex justify-content-center">
+                <Spinner animation="border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              </Container>
+            ) : (
+              forums.map((forum) => (
+                <ForumEntry
+                  key={forum._id}
+                  author={forum.author}
+                  dateCreated={new Date(forum.createdAt).toLocaleDateString(
+                    "en-US",
+                    {
+                      year: "numeric",
+                      month: "numeric",
+                      day: "numeric",
+                    }
+                  )}
+                  title={forum.title}
+                  desc={forum.desc.slice(0, DESC_MAX_LENGTH) + "..."}
+                  numPosts={forum.numPosts}
+                />
+              ))
+            )}
           </Container>
         </Container>
       </div>

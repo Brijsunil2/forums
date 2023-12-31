@@ -5,7 +5,7 @@ const getForums = asyncHandler(async (req, res) => {
   const forums = await Forum.aggregate()
     .match({})
     .limit(20)
-    .skip(20 * req.body.skip)
+    .skip(20 * req.params.skip)
     .sort({ createdAt: -1 })
     .project({ title: 1, desc: 1, author: 1, authorID: 1, createdAt: 1, updatedAt: 1, numPosts: { $size: "$posts" } });
 

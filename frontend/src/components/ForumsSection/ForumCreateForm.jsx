@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import { useCreateForumMutation } from "../../slices/forumsApiSlice";
 import * as formik from "formik";
 import * as yup from "yup";
@@ -17,17 +17,22 @@ const ForumCreateForm = () => {
   });
 
   const navagate = useNavigate();
-  // const dispatch = useDispatch();
 
-  // const [createForum, { isLoading }] = useCreateForumMutation();
+  const [createForum, { isLoading }] = useCreateForumMutation();
 
   const submitHandler = async (values) => {
-    console.log(values);
     setValidate(true);
 
-    // try {
-    //   const res = await createForum({...values,  })
-    // }
+    try {
+      const res = await createForum({
+        ...values,
+        author: "Joe2323",
+        authorID: "1111",
+      }).unwrap();
+      navagate("/");
+    } catch (err) {
+      console.log(err?.data?.message || err.error);
+    }
   };
 
   return (
@@ -75,7 +80,15 @@ const ForumCreateForm = () => {
               </Form.Control.Feedback>
             </Form.Group>
           </Row>
-          <Button type="submit">Create</Button>
+          <Button type="submit">
+            {isLoading ? (
+              <Spinner className="create-forum-spinner" animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            ) : (
+              "Create"
+            )}
+          </Button>
         </Form>
       )}
     </Formik>
