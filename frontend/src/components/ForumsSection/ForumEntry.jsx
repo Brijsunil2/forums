@@ -24,15 +24,13 @@ const ForumEntry = ({
       onClick={handleOnClick}
     >
       <Row className="d-flex p-3">
-        <Col className="forumentry-col-1" xs={6}>
-          <h3 className="forumentry-title">{title}</h3>
-          <h4 className="forumentry-desc">{desc}</h4>
+        <Col className="forumentry-col-1" xs={9}>
+          <p className="forumentry-author pb-2">{author}</p>
+          <h3 className="forumentry-title px-1">{title}</h3>
+          <h4 className="forumentry-desc px-1">{desc}</h4>
         </Col>
-        <Col className="forumentry-col-2" xs={3}>
-          <p className="forumentry-author">{author}</p>
-          <p className="forumentry-datecreated">{dateCreated}</p>
-        </Col>
-        <Col className="forumentry-col-3">
+        <Col className="forumentry-col-3" xs={3}>
+        <p className="forumentry-datecreated pb-2">{dateCreated}</p>
           <p className="forumentry-numposts">{numPosts}</p>
           <p className="forumentry-numposts">Posts</p>
         </Col>

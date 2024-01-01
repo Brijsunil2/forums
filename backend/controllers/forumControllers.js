@@ -60,8 +60,6 @@ const getForum = asyncHandler(async (req, res) => {
   // .select('activities')
   // .lean()
   // .exec((err,user)=>{....})
-  console.log(req.params.id);
-
   res.status(200).json({ message: "getForum" });
 });
 
