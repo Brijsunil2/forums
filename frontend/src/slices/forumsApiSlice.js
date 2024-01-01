@@ -16,7 +16,13 @@ export const forumsApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    getForum: builder.mutation({
+      query: (data) => ({
+        url: `${FORUMS_URL}/forum/${data.id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useCreateForumMutation, useGetForumsMutation } = forumsApiSlice;
+export const { useCreateForumMutation, useGetForumsMutation, useGetForumMutation } = forumsApiSlice;

@@ -2,18 +2,26 @@ import asyncHandler from "express-async-handler";
 import Forum from "../models/forumModel.js";
 
 const getForums = asyncHandler(async (req, res) => {
-  const regex = new RegExp(req.query.title, 'i');
+  const regex = new RegExp(req.query.title, "i");
   const forums = await Forum.aggregate()
-    .match({title: {$regex: regex}})
+    .match({ title: { $regex: regex } })
     .skip(10 * req.query.skip)
     .limit(10)
     .sort({ createdAt: -1 })
-    .project({ title: 1, desc: 1, author: 1, authorID: 1, createdAt: 1, updatedAt: 1, numPosts: { $size: "$posts" } });
+    .project({
+      title: 1,
+      desc: 1,
+      author: 1,
+      authorID: 1,
+      createdAt: 1,
+      updatedAt: 1,
+      numPosts: { $size: "$posts" },
+    });
 
-  const count = await Forum.countDocuments({title: {$regex: regex}});
+  const count = await Forum.countDocuments({ title: { $regex: regex } });
 
   if (forums && count) {
-    res.status(200).json({count, forums});
+    res.status(200).json({ count, forums });
   } else {
     res.status(500);
     throw new Error("Server is unable to find any forums");
@@ -45,4 +53,16 @@ const createForum = asyncHandler(async (req, res) => {
   }
 });
 
-export { getForums, createForum };
+const getForum = asyncHandler(async (req, res) => {
+  // UserModel
+  // .findById(user._id)
+  // .slice('activities', 20)
+  // .select('activities')
+  // .lean()
+  // .exec((err,user)=>{....})
+  console.log(req.params.id);
+
+  res.status(200).json({ message: "getForum" });
+});
+
+export { getForums, createForum, getForum };

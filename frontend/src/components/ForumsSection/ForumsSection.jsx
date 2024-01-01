@@ -118,6 +118,7 @@ const ForumsSection = () => {
               forums.map((forum) => (
                 <ForumEntry
                   key={forum._id}
+                  _id={forum._id}
                   author={forum.author}
                   dateCreated={new Date(forum.createdAt).toLocaleDateString(
                     "en-US",

@@ -15,6 +15,9 @@ import App from "./App.jsx";
 const ForumsScreen = lazy(() =>
   import("./screens/ForumsScreen/ForumsScreen.jsx")
 );
+
+const ForumScreen = lazy(() => import("./screens/ForumScreen/ForumScreen.jsx"));
+
 const NotFoundScreen = lazy(() =>
   import("./screens/NotFoundScreen/NotFoundScreen.jsx")
 );
@@ -24,6 +27,7 @@ const router = createBrowserRouter(
     <>
       <Route path="/" element={<App />}>
         <Route index={true} path="/" element={<ForumsScreen />} />
+        <Route path="/forum/:id" element={<ForumScreen />} />
         <Route path="*" element={<NotFoundScreen />} />
       </Route>
     </>

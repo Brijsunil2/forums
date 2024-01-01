@@ -1,18 +1,27 @@
+import { useNavigate } from "react-router-dom";
 import { Row, Col } from "react-bootstrap";
 import { motion } from "framer-motion";
 
 const ForumEntry = ({
+  _id,
   author,
   dateCreated,
   title,
   desc = "",
   numPosts,
 }) => {
+  const navagate = useNavigate();
+  
+  const handleOnClick = async () => {
+    navagate(`/forum/${_id}`);
+  }
+
   return (
     <motion.div
       className="forumentry-container"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
+      onClick={handleOnClick}
     >
       <Row className="d-flex p-3">
         <Col className="forumentry-col-1" xs={6}>
