@@ -18,7 +18,7 @@ export const forumsApiSlice = apiSlice.injectEndpoints({
     }),
     getForum: builder.mutation({
       query: (data) => ({
-        url: `${FORUMS_URL}/forum/${data.id}`,
+        url: `${FORUMS_URL}/forum/${data.id}?skip=${data.skip}`,
         method: "GET",
       }),
     }),

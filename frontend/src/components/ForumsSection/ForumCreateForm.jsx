@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import { useCreateForumMutation } from "../../slices/forumsApiSlice";

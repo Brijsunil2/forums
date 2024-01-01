@@ -54,7 +54,7 @@ const createForum = asyncHandler(async (req, res) => {
 });
 
 const getForum = asyncHandler(async (req, res) => {
-  const forum = await Forum.findById({_id: req.params.id }).slice("posts", 20).exec();
+  const forum = await Forum.findById({_id: req.params.id }).select("-__v").slice("posts", 20).exec();
 
   if (forum) {
     res.status(200).json({ forum });

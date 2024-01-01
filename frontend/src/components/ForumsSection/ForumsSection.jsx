@@ -64,6 +64,14 @@ const ForumsSection = () => {
         btnToolbar: helperBtnToolbar(skip + 1, Math.ceil(res.count / 10)),
       });
     } catch (err) {
+      if (err.status === 500) {
+        setForums([]);
+        setPages({
+          page: 1,
+          lastPage: 1,
+          btnToolbar: [1],
+        });
+      }
       console.log(err?.data?.message || err.error);
     }
   };
@@ -101,13 +109,21 @@ const ForumsSection = () => {
             </Row>
           </Container>
           <Container className="forumentries-container">
-            {titleQuery !== "" && <h3>Results for {titleQuery}</h3>}
-            <Container className="text-center" style={{ fontWeight: "bold" }}>
-              <p>
-                <HiDotsHorizontal /> {pages.page} / {pages.lastPage}{" "}
-                <HiDotsHorizontal />
-              </p>
-            </Container>
+            {titleQuery !== "" && (
+              <h3>
+                {forums.length > 0
+                  ? `Results for ${titleQuery}`
+                  : "No forums found"}
+              </h3>
+            )}
+            {forums.length > 0 && (
+              <Container className="text-center" style={{ fontWeight: "bold" }}>
+                <p>
+                  <HiDotsHorizontal /> {pages.page} / {pages.lastPage}{" "}
+                  <HiDotsHorizontal />
+                </p>
+              </Container>
+            )}
             {isLoading ? (
               <Container className="d-flex justify-content-center">
                 <Spinner animation="border" role="status">
@@ -135,62 +151,64 @@ const ForumsSection = () => {
               ))
             )}
           </Container>
-          <Container className="my-3 justify-self-center">
-            <ButtonToolbar
-              className="justify-content-center align-items-center"
-              aria-label="Toolbar with button groups"
-            >
-              {pages.page !== 1 && (
-                <>
-                  <ButtonGroup className="m-1">
-                    <Button onClick={() => getForumsHandler(0, titleQuery)}>
-                      <MdKeyboardDoubleArrowLeft />
-                    </Button>
-                    <Button
-                      onClick={() =>
-                        getForumsHandler(pages.page - 2, titleQuery)
-                      }
-                    >
-                      <MdKeyboardArrowLeft />
-                    </Button>
-                  </ButtonGroup>
-                  <HiDotsHorizontal />
-                </>
-              )}
+          {forums.length > 0 && (
+            <Container className="my-3 justify-self-center">
+              <ButtonToolbar
+                className="justify-content-center align-items-center"
+                aria-label="Toolbar with button groups"
+              >
+                {pages.page !== 1 && (
+                  <>
+                    <ButtonGroup className="m-1">
+                      <Button onClick={() => getForumsHandler(0, titleQuery)}>
+                        <MdKeyboardDoubleArrowLeft />
+                      </Button>
+                      <Button
+                        onClick={() =>
+                          getForumsHandler(pages.page - 2, titleQuery)
+                        }
+                      >
+                        <MdKeyboardArrowLeft />
+                      </Button>
+                    </ButtonGroup>
+                    <HiDotsHorizontal />
+                  </>
+                )}
 
-              <ButtonGroup className="m-1" aria-label="First group">
-                {pages.btnToolbar.map((btnNum) => (
-                  <Button
-                    key={btnNum}
-                    active={btnNum === pages.page}
-                    onClick={() => getForumsHandler(btnNum - 1, titleQuery)}
-                  >
-                    {btnNum}
-                  </Button>
-                ))}
-              </ButtonGroup>
-              {pages.page !== pages.lastPage && (
-                <>
-                  <HiDotsHorizontal />
+                <ButtonGroup className="m-1" aria-label="First group">
+                  {pages.btnToolbar.map((btnNum) => (
+                    <Button
+                      key={btnNum}
+                      active={btnNum === pages.page}
+                      onClick={() => getForumsHandler(btnNum - 1, titleQuery)}
+                    >
+                      {btnNum}
+                    </Button>
+                  ))}
+                </ButtonGroup>
+                {pages.page !== pages.lastPage && (
+                  <>
+                    <HiDotsHorizontal />
 
-                  <ButtonGroup className="m-1">
-                    <Button
-                      onClick={() => getForumsHandler(pages.page, titleQuery)}
-                    >
-                      <MdKeyboardArrowRight />
-                    </Button>
-                    <Button
-                      onClick={() =>
-                        getForumsHandler(pages.lastPage - 1, titleQuery)
-                      }
-                    >
-                      <MdKeyboardDoubleArrowRight />
-                    </Button>
-                  </ButtonGroup>
-                </>
-              )}
-            </ButtonToolbar>
-          </Container>
+                    <ButtonGroup className="m-1">
+                      <Button
+                        onClick={() => getForumsHandler(pages.page, titleQuery)}
+                      >
+                        <MdKeyboardArrowRight />
+                      </Button>
+                      <Button
+                        onClick={() =>
+                          getForumsHandler(pages.lastPage - 1, titleQuery)
+                        }
+                      >
+                        <MdKeyboardDoubleArrowRight />
+                      </Button>
+                    </ButtonGroup>
+                  </>
+                )}
+              </ButtonToolbar>
+            </Container>
+          )}
         </Container>
       </div>
       <Modal show={showModal} onHide={handleModalClose}>
