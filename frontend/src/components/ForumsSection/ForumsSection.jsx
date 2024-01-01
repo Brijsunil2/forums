@@ -28,6 +28,7 @@ const ForumsSection = () => {
   const [showModal, setShowModal] = useState(false);
   const [forums, setForums] = useState([]);
   const [pages, setPages] = useState({ page: 1, lastPage: 1, btnToolbar: [1] });
+  const [titleQuery, setTitleQuery] = useState("");
 
   const [getForums, { isLoading }] = useGetForumsMutation();
 
@@ -80,7 +81,8 @@ const ForumsSection = () => {
   const handleModalShow = () => setShowModal(true);
 
   const searchBarSubmit = (value) => {
-    getForumsHandler(pages.page - 1, value);
+    setTitleQuery(value);
+    getForumsHandler(0, value);
   };
 
   return (
@@ -99,9 +101,11 @@ const ForumsSection = () => {
             </Row>
           </Container>
           <Container className="forumentries-container">
+            {titleQuery !== "" && <h3>Results for {titleQuery}</h3>}
             <Container className="text-center" style={{ fontWeight: "bold" }}>
               <p>
-                <HiDotsHorizontal /> {pages.page} <HiDotsHorizontal />
+                <HiDotsHorizontal /> {pages.page} / {pages.lastPage}{" "}
+                <HiDotsHorizontal />
               </p>
             </Container>
             {isLoading ? (
@@ -138,10 +142,14 @@ const ForumsSection = () => {
               {pages.page !== 1 && (
                 <>
                   <ButtonGroup className="m-1">
-                    <Button onClick={() => getForumsHandler(0)}>
+                    <Button onClick={() => getForumsHandler(0, titleQuery)}>
                       <MdKeyboardDoubleArrowLeft />
                     </Button>
-                    <Button onClick={() => getForumsHandler(pages.page - 2)}>
+                    <Button
+                      onClick={() =>
+                        getForumsHandler(pages.page - 2, titleQuery)
+                      }
+                    >
                       <MdKeyboardArrowLeft />
                     </Button>
                   </ButtonGroup>
@@ -154,7 +162,7 @@ const ForumsSection = () => {
                   <Button
                     key={btnNum}
                     active={btnNum === pages.page}
-                    onClick={() => getForumsHandler(btnNum - 1)}
+                    onClick={() => getForumsHandler(btnNum - 1, titleQuery)}
                   >
                     {btnNum}
                   </Button>
@@ -165,11 +173,15 @@ const ForumsSection = () => {
                   <HiDotsHorizontal />
 
                   <ButtonGroup className="m-1">
-                    <Button onClick={() => getForumsHandler(pages.page)}>
+                    <Button
+                      onClick={() => getForumsHandler(pages.page, titleQuery)}
+                    >
                       <MdKeyboardArrowRight />
                     </Button>
                     <Button
-                      onClick={() => getForumsHandler(pages.lastPage - 1)}
+                      onClick={() =>
+                        getForumsHandler(pages.lastPage - 1, titleQuery)
+                      }
                     >
                       <MdKeyboardDoubleArrowRight />
                     </Button>
