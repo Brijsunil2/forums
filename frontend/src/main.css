@@ -49,7 +49,7 @@ p {
 
 .btn {
   border-radius: 20px;
-  min-width: 5em;
+  min-width: fit-content;
   background-color: #0000ff;
   color: white;
 }

@@ -2,15 +2,19 @@ import asyncHandler from "express-async-handler";
 import Forum from "../models/forumModel.js";
 
 const getForums = asyncHandler(async (req, res) => {
+  console.log(req.query.skip)
+  const regex = new RegExp(req.query.title, 'i');
   const forums = await Forum.aggregate()
-    .match({})
-    .limit(20)
-    .skip(20 * req.params.skip)
+    .match({title: {$regex: regex}})
+    .skip(10 * req.query.skip)
+    .limit(10)
     .sort({ createdAt: -1 })
     .project({ title: 1, desc: 1, author: 1, authorID: 1, createdAt: 1, updatedAt: 1, numPosts: { $size: "$posts" } });
 
-  if (forums) {
-    res.status(200).json(forums);
+  const count = await Forum.countDocuments({});
+
+  if (forums && count) {
+    res.status(200).json({count, forums});
   } else {
     res.status(500);
     throw new Error("Server is unable to find any forums");

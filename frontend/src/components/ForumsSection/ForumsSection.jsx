@@ -1,6 +1,22 @@
 import "./ForumsSection.css";
 import { useState, useEffect, useRef } from "react";
-import { Container, Row, Col, Button, Modal, Spinner } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Modal,
+  Spinner,
+  ButtonToolbar,
+  ButtonGroup,
+} from "react-bootstrap";
+import {
+  MdKeyboardArrowRight,
+  MdKeyboardArrowLeft,
+  MdKeyboardDoubleArrowLeft,
+  MdKeyboardDoubleArrowRight,
+} from "react-icons/md";
+import { HiDotsHorizontal } from "react-icons/hi";
 import { useGetForumsMutation } from "../../slices/forumsApiSlice.js";
 import ForumEntry from "./ForumEntry";
 import Searchbar from "../Searchbar/Searchbar";
@@ -11,14 +27,41 @@ const ForumsSection = () => {
   const init = useRef(false);
   const [showModal, setShowModal] = useState(false);
   const [forums, setForums] = useState([]);
-  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState({ page: 1, lastPage: 1, btnToolbar: [1] });
 
   const [getForums, { isLoading }] = useGetForumsMutation();
 
-  const getForumsHandler = async (skip) => {
+  const helperBtnToolbar = (page, lastPage) => {
+    let btns = [];
+    var i = 1;
+
+    if (lastPage < 5) {
+      i = 1;
+    } else if (page >= 3 && page <= lastPage - 3) {
+      i = page - 2;
+    } else if (page >= lastPage - 3) {
+      i = lastPage - 4;
+    }
+
+    var j = 0;
+    while (j < 5 && i <= lastPage) {
+      btns.push(i);
+      i++;
+      j++;
+    }
+
+    return btns;
+  };
+
+  const getForumsHandler = async (skip, title = "") => {
     try {
-      const res = await getForums({ skip: skip }).unwrap();
-      setForums(res);
+      const res = await getForums({ skip, title }).unwrap();
+      setForums(res.forums);
+      setPages({
+        page: skip + 1,
+        lastPage: Math.ceil(res.count / 10),
+        btnToolbar: helperBtnToolbar(skip + 1, Math.ceil(res.count / 10)),
+      });
     } catch (err) {
       console.log(err?.data?.message || err.error);
     }
@@ -26,18 +69,18 @@ const ForumsSection = () => {
 
   useEffect(() => {
     if (!init.current) {
-      getForumsHandler(page - 1);
+      getForumsHandler(pages.page - 1);
     }
 
     return () => (init.current = true);
-  }, [init, getForumsHandler, forums, setForums]);
+  }, [init, getForumsHandler]);
 
   const handleModalClose = () => setShowModal(false);
 
   const handleModalShow = () => setShowModal(true);
 
   const searchBarSubmit = (value) => {
-    console.log(value);
+    getForumsHandler(pages.page - 1, value);
   };
 
   return (
@@ -56,6 +99,11 @@ const ForumsSection = () => {
             </Row>
           </Container>
           <Container className="forumentries-container">
+            <Container className="text-center" style={{ fontWeight: "bold" }}>
+              <p>
+                <HiDotsHorizontal /> {pages.page} <HiDotsHorizontal />
+              </p>
+            </Container>
             {isLoading ? (
               <Container className="d-flex justify-content-center">
                 <Spinner animation="border" role="status">
@@ -81,6 +129,54 @@ const ForumsSection = () => {
                 />
               ))
             )}
+          </Container>
+          <Container className="my-3 justify-self-center">
+            <ButtonToolbar
+              className="justify-content-center align-items-center"
+              aria-label="Toolbar with button groups"
+            >
+              {pages.page !== 1 && (
+                <>
+                  <ButtonGroup className="m-1">
+                    <Button onClick={() => getForumsHandler(0)}>
+                      <MdKeyboardDoubleArrowLeft />
+                    </Button>
+                    <Button onClick={() => getForumsHandler(pages.page - 2)}>
+                      <MdKeyboardArrowLeft />
+                    </Button>
+                  </ButtonGroup>
+                  <HiDotsHorizontal />
+                </>
+              )}
+
+              <ButtonGroup className="m-1" aria-label="First group">
+                {pages.btnToolbar.map((btnNum) => (
+                  <Button
+                    key={btnNum}
+                    active={btnNum === pages.page}
+                    onClick={() => getForumsHandler(btnNum - 1)}
+                  >
+                    {btnNum}
+                  </Button>
+                ))}
+              </ButtonGroup>
+              {pages.page !== pages.lastPage && (
+                <>
+                  <HiDotsHorizontal />
+
+                  <ButtonGroup className="m-1">
+                    <Button onClick={() => getForumsHandler(pages.page)}>
+                      <MdKeyboardArrowRight />
+                    </Button>
+                    <Button
+                      onClick={() => getForumsHandler(pages.lastPage - 1)}
+                    >
+                      <MdKeyboardDoubleArrowRight />
+                    </Button>
+                  </ButtonGroup>
+                </>
+              )}
+            </ButtonToolbar>
           </Container>
         </Container>
       </div>
