@@ -54,13 +54,14 @@ const createForum = asyncHandler(async (req, res) => {
 });
 
 const getForum = asyncHandler(async (req, res) => {
-  // UserModel
-  // .findById(user._id)
-  // .slice('activities', 20)
-  // .select('activities')
-  // .lean()
-  // .exec((err,user)=>{....})
-  res.status(200).json({ message: "getForum" });
+  const forum = await Forum.findById({_id: req.params.id }).slice("posts", 20).exec();
+
+  if (forum) {
+    res.status(200).json({ forum });
+  } else {
+    res.status(500);
+    throw new Error("Server cannot find forum, forum may not exist");
+  }
 });
 
 export { getForums, createForum, getForum };
