@@ -32,3 +32,25 @@
 .forumheader-container .forumheader-dates {
   font-size: 0.8em;
 }
+
+.forumpostentry-container {
+  background-color: white;
+}
+
+.forumpostentry-container:nth-child(even) {
+  background-color: rgb(247, 247, 247);
+}
+
+.forumpostentry-container .forumpost-msg {
+  font-size: 0.9em;
+  margin: 0;
+}
+
+.forumpostentry-container .forumpost-author {
+  font-weight: bold;
+  font-size: 0.8em;
+}
+
+.forumpostentry-container .forumpost-dates {
+  font-size: 0.8em;
+}

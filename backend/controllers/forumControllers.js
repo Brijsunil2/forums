@@ -5,9 +5,9 @@ const getForums = asyncHandler(async (req, res) => {
   const regex = new RegExp(req.query.title, "i");
   const forums = await Forum.aggregate()
     .match({ title: { $regex: regex } })
+    .sort({createdAt: -1})
     .skip(10 * req.query.skip)
     .limit(10)
-    .sort({ createdAt: -1 })
     .project({
       title: 1,
       desc: 1,

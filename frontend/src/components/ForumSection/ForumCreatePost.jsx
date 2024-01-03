@@ -3,7 +3,7 @@ import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import * as formik from "formik";
 import * as yup from "yup";
 
-const ForumCreatePost = () => {
+const ForumCreatePost = ({ socket, forumID }) => {
   const [validate, setValidate] = useState(true);
 
   const { Formik } = formik;
@@ -15,7 +15,12 @@ const ForumCreatePost = () => {
   const submitHandler = async (values) => {
     setValidate(true);
 
-    console.log(values);
+    socket.emit("forumReply", {
+      msg: values.msg,
+      author: "Joe2323",
+      authorID: "1111",
+      forumID: forumID,
+    });
   };
 
   return (

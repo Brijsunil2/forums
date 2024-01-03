@@ -28,7 +28,10 @@ const ForumCreateForm = () => {
         author: "Joe2323",
         authorID: "1111",
       }).unwrap();
-      navagate("/");
+
+      if (res) {
+        navagate(`/forum/${res._id}`);
+      }
     } catch (err) {
       console.log(err?.data?.message || err.error);
     }
