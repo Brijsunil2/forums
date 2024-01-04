@@ -60,7 +60,6 @@ const ForumSection = () => {
 
     socket.on(`forumReplyUpdate/${id}`, (data) => {
       dispatch(postReplys(data));
-      console.log(data)
       setForumData({...forumData, posts: [...forumData.posts, data]})
       setShowModal(false);
     });
